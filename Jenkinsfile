@@ -1,11 +1,10 @@
 pipeline {
     agent any
-        }
 
+    stages {
         stage('Build') {
             steps {
                 echo 'Building the app...'
-                // لو Node.js مثلا:
                 // sh 'npm install'
             }
         }
@@ -20,7 +19,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying the app...'
-                // sh './deploy.sh' مثلا
+                // sh './deploy.sh'
             }
         }
     }
