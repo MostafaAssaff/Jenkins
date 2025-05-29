@@ -1,15 +1,25 @@
-pipeline {
-    agent any
-
-    stages {
+podTemplate(
+    containers: [
+        containerTemplate(
+            name: 'kubectl',
+            image: 'lachlanevenson/k8s-kubectl:latest',
+            command: 'cat',
+            ttyEnabled: true,
+            volumeMounts: [
+                volumeMount(mountPath: '/root/.kube', name: 'kube-config')
+            ]
+        )
+    ],
+    volumes: [
+        secretVolume(secretName: 'my-kubeconfig-secret', mountPath: '/root/.kube')
+    ]
+) {
+    node(POD_LABEL) {
         stage('Checkout') {
-            steps {
-                git credentialsId: 'github-pat', url: 'https://github.com/MostafaAssaff/Jenkins.git'
-            }
+            checkout scm
         }
-
         stage('Deploy to Minikube') {
-            steps {
+            container('kubectl') {
                 sh 'kubectl apply -f deployment.yaml'
             }
         }
