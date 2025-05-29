@@ -1,21 +1,21 @@
 pipeline {
     agent any
     environment {
-        KUBECONFIG_CREDENTIAL_ID = 'minikube-config' // استخدم الـ ID الذي اخترته
+        KUBECONFIG_CREDENTIAL_ID = 'minikube-config'
+        PATH = "$PATH:$HOME/.local/bin" // Add the local bin directory to PATH
     }
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MostafaAssaff/Jenkins.git' // استبدل برابط مستودع التطبيق الخاص بك
+                git 'https://github.com/MostafaAssaff/Jenkins.git'
             }
         }
         stage('Install kubectl') {
-    steps {
-        sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-        sh 'chmod +x ./kubectl'
-        sh 'mkdir -p ~/.local/bin'
-        sh 'mv ./kubectl ~/.local/bin/kubectl'
-        sh 'export PATH="$PATH:~/.local/bin"'
+            steps {
+                sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                sh 'chmod +x ./kubectl'
+                sh 'mkdir -p ~/.local/bin'
+                sh 'mv ./kubectl ~/.local/bin/kubectl'
             }
         }
         stage('Deploy to Kubernetes') {
