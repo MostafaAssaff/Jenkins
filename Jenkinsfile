@@ -2,59 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
-            when {
-                branch 'dev'
-            }
+        stage('Checkout') {
             steps {
-                echo "🏗 Building app on 'dev' branch"
-                sh 'npm install'
+                git 'https://github.com/username/repository.git'
             }
         }
 
-        stage('Lint') {
-            when {
-                branch 'dev'
-            }
+        stage('Deploy to Minikube') {
             steps {
-                echo "🧹 Linting code on 'dev' branch"
-                sh 'npm run lint'
-            }
-        }
-
-        stage('Test') {
-            when {
-                anyOf {
-                    branch 'test'
-                    branch 'master'
-                }
-            }
-            steps {
-                echo "🧪 Running tests on ${env.BRANCH_NAME}"
-                sh 'npm install'
-                sh 'npm test'
-            }
-        }
-
-        stage('Deploy to Staging') {
-            when {
-                branch 'test'
-            }
-            steps {
-                echo "🚀 Deploying to STAGING from 'test' branch"
-                // simulate deploy
-                sh 'echo "Deployed to staging!"'
-            }
-        }
-
-        stage('Deploy to Production') {
-            when {
-                branch 'master'
-            }
-            steps {
-                echo "🚀 Deploying to PRODUCTION from 'master' branch"
-                // simulate deploy
-                sh 'echo "Deployed to production!"'
+                sh 'kubectl apply -f deployment.yaml'
             }
         }
     }
