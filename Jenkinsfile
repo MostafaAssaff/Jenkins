@@ -21,13 +21,14 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG_FILE')]) {
-                sh '''
-                  echo "KUBECONFIG_FILE is: $KUBECONFIG_FILE"
-                  export KUBECONFIG="$KUBECONFIG_FILE"
-                  kubectl apply -f kubernetes/deployment.yaml
+                    sh '''
+                      echo "KUBECONFIG_FILE is: $KUBECONFIG_FILE"
+                      echo "First few lines of kubeconfig file:"
+                      cat "$KUBECONFIG_FILE" | head -n 5
+                      kubectl apply -f kubernetes/deployment.yaml --kubeconfig "$KUBECONFIG_FILE"
                     '''
+                }
+            }
         }
-    }
-}
     }
 }
