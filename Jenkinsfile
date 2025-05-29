@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/username/repository.git'
+                git credentialsId: 'github-pat', url: 'https://github.com/MostafaAssaff/Jenkins.git'
             }
         }
 
