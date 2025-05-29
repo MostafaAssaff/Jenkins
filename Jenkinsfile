@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         KUBECONFIG_CREDENTIAL_ID = 'minikube-config'
-        PATH = "$PATH:$HOME/.local/bin" // Add the local bin directory to PATH
+        PATH = "$PATH:$HOME/.local/bin"
     }
     stages {
         stage('Checkout') {
@@ -20,8 +20,8 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-                    sh 'kubectl apply -f kubernetes/deployment.yaml --kubeconfig $KUBECONFIG'
+                withCredentials([file(credentialsId: KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG_FILE')]) {
+                    sh 'kubectl apply -f kubernetes/deployment.yaml --kubeconfig "$KUBECONFIG_FILE"'
                 }
             }
         }
