@@ -7,14 +7,21 @@ kind: Pod
 spec:
   containers:
   - name: jnlp
-    image: jenkins/inbound-agent:latest
+    image: bitnami/kubectl:latest
+    command:
+    - cat
+    tty: true
     volumeMounts:
     - name: kubeconfig-volume
       mountPath: /home/jenkins/.kube
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent
   volumes:
   - name: kubeconfig-volume
     secret:
       secretName: my-kubeconfig-secret
+  - name: workspace-volume
+    emptyDir: {}
 """
         }
     }
